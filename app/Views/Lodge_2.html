@@ -1,0 +1,18 @@
+<div class="row" style="margin: 0px;padding:0px;border:none" ng-if="Lodge.length>0">
+    <div class="col s12 m12 l12" style="margin: 0px;padding:0px;">
+        <div id="carousel_full" class="carousel carousel-slider" style="margin: 0px;padding:0px;">
+            <div class="carousel-fixed-item center container show-on-large hide-on-med-and-down" style="z-index: 3">
+                <a class="btn-floating waves-effect waves-yellow grey darken-4" onclick="$('#carousel_full').carousel('prev');"><i class="material-icons white-text">keyboard_arrow_left</i></a>
+                <a class="btn-floating waves-effect waves-yellow grey darken-4" onclick="$('#carousel_full').carousel('next');"><i class="material-icons white-text">keyboard_arrow_right</i></a>
+            </div>
+            <div class="carousel-fixed-item center container show-on-medium-and-down hide-on-large-only" style="z-index: 3">
+                <a class="btn-floating btn-large left waves-effect waves-yellow grey darken-4" onclick="$('#carousel_full').carousel('prev');"><i class="material-icons white-text">keyboard_arrow_left</i></a>
+                <a class="btn-floating btn-large right waves-effect waves-yellow grey darken-4" onclick="$('#carousel_full').carousel('next');"><i class="material-icons white-text">keyboard_arrow_right</i></a>
+            </div>
+            <div class="marco_container">
+                <div class="marco_slide"></div>
+            </div>
+            <a class="carousel-item" href="#A{{item.$id}}" ng-repeat="item in Lodge"><img src="{{item.url}}"></a>
+        </div>
+    </div>
+</div>

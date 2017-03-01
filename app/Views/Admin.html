@@ -1,0 +1,52 @@
+<div class="navbar-fixed">
+    <nav>
+        <div class="nav-wrapper" style="background:url('images/darkermap.jpg') repeat center">
+            <a id="base" href="#" class="brand-logo center">
+                <img class="responsive-img" src="images/logo2.png">
+            </a>
+            <div class="left">
+                <ul class="tabs tabs-transparent center hide-on-med-and-down" style="font-family:Roboto">
+                    <li class="tab"><a href="#Lodge" class="white-text center center-align active">LODGE</a></li>
+                    <li class="tab"><a href="#Hunting" class="white-text center center-align">HUNTING</a></li>
+                    <li class="tab"><a href="#Bucks" class="white-text center center-align">BUCKS</a></li>
+                    <li class="tab"><a href="#Gallery" class="white-text center center-align">GALLERY</a></li>
+                </ul>
+            </div>
+            <ul class="right">
+                <li><a class="btn brown waves-effect waves-yellow darken-4 white-text" href="#" ng-click="LogOut()">Sign Out</a></li>
+            </ul>
+            <ul id="slide-out" class="side-nav section z-depth-5">
+                <li><a href="#Lodge" class="white-text">LODGE</a></li>
+                <li><a href="#Hunting" class="white-text">HUNTING</a></li>
+                <li><a href="#Bucks" class="white-text">BUCKS</a></li>
+                <li><a href="#Gallery" class="white-text">GALLERY</a></li>
+            </ul>
+            <a href="#" data-activates="slide-out" class="button-collapse section table-of-contents">
+                <i class="material-icons" class="black-text center center-align" style="font-size:90px;">menu</i>
+            </a>
+        </div>
+    </nav>
+</div>
+<!-- NAVBAR END !-->
+
+
+<div id="Lodge">
+    <div ng-include="'app/Views/AdminLodge.html'"></div>
+</div>
+<div id="Hunting">
+    <div ng-include="'app/Views/Admin_Hunting.html'"></div>
+</div>
+<div id="Bucks">
+    <div ng-include="'app/Views/Admin_Bucks.html'"></div>
+</div>
+<div id="Gallery">
+    <div ng-include="'app/Views/Admin_Media.html'"></div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $('ul.tabs').tabs({
+            swipeable: true
+        });
+    });
+</script>

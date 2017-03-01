@@ -1,0 +1,150 @@
+<div class="row" ng-controller="HuntsCtrl">
+    <div class="col s12 m12 l4">
+        <div class="card" style="height:80vh;overflow: scroll">
+            <br/>
+            <h4 class="card-title center">Hunt Seasons {{SelectPrincipal.tittle}}</h4>
+            <div class="card-content">
+                <div ng-if="SelectType!=null" class="center-align">
+                    <div class="row">
+                        <form action="#">
+                            <div class="input-field col s12">
+                                <i class="material-icons prefix">description</i>
+                                <textarea id="Desc_Hunt_Image" type="text" class="materialize-textarea" ng-model="descriptionImage" ng-change="ChangeImageDesc()"></textarea>
+                                <label for="Desc_Hunt_Image">Description</label>
+                            </div>
+                        </form>
+                    </div>
+                    <h6>Upload File to Album:</h6>
+                    <form action="#">
+                        <div class="file-field input-field">
+                            <div class="btn brown darken-4">
+                                <span class="white-text">File</span>
+                                <input class="black-text" type="file" ng-model="files_lodge" ngf-select multiple ngf-resize="{ ratio: '1:4',type: 'image/jpeg',centerCrop: true, pattern='.jpg', restoreExif: false}">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input id="file_bucks" class="file-path black-text validate" type="text">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="center">
+                                <a class="btn brown white-text" ng-click="onFileSelected(files_lodge)">Upload</a>
+                                <a ng-click="clear()" class="btn red darken-3 white-text">Clear</a>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="row" ng-show="uploadLodge==true">
+                        <div class="progress">
+                            <div id="progressLodge" class="indeterminate"></div>
+                        </div>
+                    </div>
+                    <div class="row center center-align">
+                        </br>
+                        <a class="btn brown darken-4 white-text" ng-click="GoBack()">Go Back</a>
+                    </div>
+                </div>
+                <div ng-if="SelectType==null">
+                    <h6>Create Season:</h6>
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">text_format</i>
+                            <input id="Tittle_Hunt_Season" type="text" ng-model="TittleCreate" ng-change="ChangeTittle()"></input>
+                            <label for="Tittle_Hunt_Season">Tittle</label>
+                        </div>
+                        <div class="input-field col s12">
+                            <i class="material-icons prefix">description</i>
+                            <textarea id="Desc_Hunt_Season" type="text" class="materialize-textarea" ng-model="descriptionCreate" ng-change="ChangeDescription()"></textarea>
+                            <label for="Tittle_Hunt_Season">Description</label>
+                        </div>
+                    </div>
+                    <div class="file-field input-field">
+                        <div class="btn brown darken-4">
+                            <span class="white-text">Image</span>
+                            <input class="black-text" type="file" ng-model="files_lodge" ngf-select ngf-resize="{ ratio: '1:4',type: 'image/jpeg',centerCrop: true, pattern='.jpg', restoreExif: false}">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input id="file_bucks" class="file-path black-text validate" type="text" placeholder="Principal Image">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="center">
+                            <a class="btn brown white-text" ng-click="Create(files_lodge)">Create</a>
+                            <a ng-click="clear()" class="btn red darken-3 white-text">Clear</a>
+                        </div>
+                    </div>
+                    <div class="row" ng-show="uploadLodge==true">
+                        <div class="progress">
+                            <div id="progressLodge" class="indeterminate"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col s12 m12 l8">
+        <div class="card" style="height:80vh;">
+            <br/>
+            <div class="row" ng-if="SelectType!=null">
+                <h4 class="card-title center">Album</h4>
+                <div class="center center-align">
+                    <h6>{{SelectPrincipal.tittle}}</h6>
+                </div>
+                <div class="col s4" ng-repeat="item in SelectAlbum">
+                    <div class="card z-depth-3">
+                        <div class="card-image center-block">
+                            <img ng-click="viewModal(item.url)" src="{{item.url}}" class="materialboxed responsive-img" width="400">
+                        </div>
+                        <div class="card-action fixed">
+                            <a class="btn brown white-text" ng-click="DeleteImageHunts(item)">Delete</a>
+                            <a class="btn brown darken-4 white-text" ng-click="setPrincipal(item)"><i class="material-icons">photo_album</i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row" ng-if="SelectType==null">
+                <div class="center center-align">
+                    <h4>Seasons</h4>
+                </div>
+                <div class="col s4" ng-repeat="item in allSeasons">
+                    <div class="card z-depth-3">
+                        <div class="card-image center-block">
+                            <img ng-click="viewModal(item.image.url)" src="{{item.image.url}}" class="materialboxed responsive-img" width="400">
+                        </div>
+                        <div class="card-action fixed center-align">
+                            <h6>{{item.tittle}}</h6>
+                            </br>
+                            <a class="btn brown white-text" ng-click="SelectSeason(item.season,item)">Edit</a>
+                            <a class="btn red darken-4 white-text" ng-click="Delete_Season(item.season,item)"><i class="material-icons">delete</i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="modalDelete_Hunts" class="modal">
+        <div class="modal-content center-align">
+            <h3>Do you want to delete?</h3>
+            <h2 id="deleteTittle_Season" class="red-text text-darken-4"></h2>
+        </div>
+        <div class="modal-footer center-align">
+            <div class="col s6">
+                <a class="btn red darken-4 white-text" ng-click="DeleteSeason()">DELETE</a>
+            </div>
+            <div class="col s6">
+                <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+            </div>
+        </div>
+    </div>
+    <div id="modalFoto_Bucks" class="modal">
+        <div class="modal-content center-align">
+            <img id="modalBucks" class="responsive-img">
+        </div>
+        <div class="modal-footer center-align">
+            <a class=" modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function() {
+        $('.modal').modal();
+    });
+</script>
