@@ -1,4 +1,4 @@
-chaparral.controller("LodgeCtrl", ["$filter", "$scope", '$location', "Upload", "fireFact", function($filter, $scope, $location, Upload, fireFact) {
+chaparral.controller("LodgeCtrl", ["$http","$filter", "$scope", '$location', "Upload", "fireFact", function($http,$filter, $scope, $location, Upload, fireFact) {
 
     //OBJECTS
     $scope.files_lodge;
@@ -13,36 +13,15 @@ chaparral.controller("LodgeCtrl", ["$filter", "$scope", '$location', "Upload", "
         $("#file_lodge").val("");
     }
     $scope.onFileSelected = function($files, path) {
+        var dataImage=[];
         for (i = 0; i < $files.length; i++) {
-            $scope.uploadLodge = true;
-            var file = $files[i];
-            file.name = fireFact.guid() + "." + file.name.split('.').pop();
-            var _storage = fireFact.fireStorage(path + $files[i].name);
-            var meta = {
-                contentType: file.type,
-                name: $files[i].name
-            };
-            var _uploadtask = _storage.$put(file, meta);
-            _uploadtask.$progress(function(snapshot) {
-                $scope.uploadLodge = snapshot.state == "running" ? true : false;
-            });
-            _uploadtask.$complete(function(snapshot) {
-                console.log(snapshot);
-                var _ref = fireFact.fireArray(fireFact.firePath.lodge);
-                var key = _ref.$add({
-                    ref: snapshot.metadata.name,
-                    url: snapshot.downloadURL,
-                    timestamp: Date.now()
-                }).then(function(response) {
-                    $scope.AllLodge.$ref();
-                }, function(error) {
-                    Materialize.toast("Error undefined", 4000);
-                });
-                Materialize.toast("Upload Success", 4000);
-            });
-            _uploadtask.$error(function(error) {
-                Materialize.toast("Error undefined", 4000);
-            });
+            form = new FormData();
+            form.append('filedata',$files[i]);
+            $http.post('http://localhost:8080/12345/file/'+$files[i].name,form,{transformRequest: angular.identity,headers: { 'Content-Type': undefined,'token':'12345'}}).then(function(response){
+                console.log(response);
+            },function(error){
+                console.log(error)
+            })
         }
         $scope.clear();
     }

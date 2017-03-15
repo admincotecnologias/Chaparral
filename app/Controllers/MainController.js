@@ -14,13 +14,16 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact) {
     $scope.GetLodge = function() {
         $scope.Lodge = fireFact.fireArray(fireFact.firePath.lodge);
         $scope.Lodge.$loaded().then(function(x) {
-            $(document).ready(function() {
-                $('#carousel_full').carousel({
-                    full_width: true
+            $(document).ready(function () {
+                angular.forEach(x,function (item,index) {
+                    $("#carousel_full").append('<li class="marco_container"><img src="'+item.$value+'"><div class="marco_slide"></div></li>');
+                })
+                $('.slider').slider({
+                    indicators:false,
+                    height:550,
+                    interval:2000
                 });
-                $('#carousel_full').carousel('set', 1);
-                $('.parallax').parallax();
-            });
+            })
         });
     }
     $scope.GetMedia = function() {
