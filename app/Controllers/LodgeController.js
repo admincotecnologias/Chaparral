@@ -16,9 +16,21 @@ chaparral.controller("LodgeCtrl", ["$http","$filter", "$scope", '$location', "Up
         var dataImage=[];
         for (i = 0; i < $files.length; i++) {
             form = new FormData();
-            form.append('filedata',$files[i]);
-            $http.post('http://localhost:8080/12345/file/'+$files[i].name,form,{transformRequest: angular.identity,headers: { 'Content-Type': undefined,'token':'12345'}}).then(function(response){
-                console.log(response);
+            let dataFile = $files[i];
+            let file = new File([dataFile],dataFile.$ngfName,{type:dataFile.type});
+            console.log(file)
+            form.append('files',file);
+            var fire = fireFact.fireArray(fireFact.firePath.lodge);
+            $http.post(fireFact.api.storage+fireFact.api.lodge,form,{transformRequest: angular.identity,headers: {
+                'Content-Type': undefined}}).then(function(response){
+                    console.log(fire,response,file)
+                fire.$add({
+                    filename:file.name,
+                    type: file.type,
+                    url:fireFact.api.storage+fireFact.api.lodge+'/'+response.data.filename
+                }).then(function (ref) {
+                    console.log(ref)
+                })
             },function(error){
                 console.log(error)
             })
@@ -41,7 +53,7 @@ chaparral.controller("LodgeCtrl", ["$http","$filter", "$scope", '$location', "Up
     }
     $scope.viewModal = function(url) {
         console.log(url);
-        $("#modalLodge").attr("src", url);
+        $("#modalLodge").attr("src", $(url).attr('src'));
         $('#modalFoto_Lodge').modal('open');
     }
     $scope.GetLodge = function() {

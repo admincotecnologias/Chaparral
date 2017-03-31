@@ -37,6 +37,6 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact) {
             });
         });
     }
-    $scope.GetLodge();
-    $scope.GetMedia();
+    //$scope.GetLodge();
+    //$scope.GetMedia();
 });

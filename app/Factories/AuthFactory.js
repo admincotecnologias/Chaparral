@@ -1,4 +1,4 @@
-chaparral.factory('fireFact', ['$firebaseObject', "$firebaseArray", 'fireUrl', '$firebaseAuth', "$firebaseStorage", "firePath", function($firebaseObject, $firebaseArray, fireUrl, $firebaseAuth, $firebaseStorage, firePath) {
+chaparral.factory('fireFact', ['$firebaseObject', "$firebaseArray", 'fireUrl', '$firebaseAuth', "$firebaseStorage", "firePath",'api', function($firebaseObject, $firebaseArray, fireUrl, $firebaseAuth, $firebaseStorage, firePath,api) {
     var _ref = firebase.database().ref();
     var _fire = $firebaseObject(_ref);
     var _fireAuth = $firebaseAuth();
@@ -31,5 +31,5 @@ chaparral.factory('fireFact', ['$firebaseObject', "$firebaseArray", 'fireUrl', '
             .toString(16)
             .substring(1);
     }
-    return { firebase: _fire, fireAuth: _fireAuth, fireStorage: _fireStorage, fireRef: _fireRef, fireArray: _fireArray, firePath: firePath, guid: _guid, fireEqualsTo: _refEqualTo };
+    return { firebase: _fire, fireAuth: _fireAuth, fireStorage: _fireStorage, fireRef: _fireRef, fireArray: _fireArray, firePath: firePath,api:api, guid: _guid, fireEqualsTo: _refEqualTo };
 }]);

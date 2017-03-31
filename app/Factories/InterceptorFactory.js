@@ -1,11 +1,6 @@
-chaparral.factory('InterceptorFact', ['$q', '$location', '$injector', function($q, $location, $injector) {
+chaparral.factory('InterceptorFact', ['$q', '$location', '$injector','fireFact', function($q, $location, $injector,fireFact) {
     var _request = function(config) {
-        var authData = angular.fromJson(localStorage.getItem("auth"));
-        if (authData != null) {
-            config.headers.token = authData.token;
-        } else {
-            config.headers.token = "";
-        }
+        config.headers.token_storage=fireFact.api.token;
         return config;
     }
     var _responseError = function(rejection) {

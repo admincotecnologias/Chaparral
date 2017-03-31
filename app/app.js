@@ -8,7 +8,7 @@ var config = {
 };
 firebase.initializeApp(config);
 //Initialize Angular
-chaparral = angular.module("Chaparral", ['ngRoute', 'ngTouch', 'firebase', 'ngFileUpload', 'ngImageCompress', 'ui.materialize'])
+chaparral = angular.module("Chaparral", ['ngRoute', 'ngTouch', 'firebase', 'ngFileUpload', 'ngImageCompress', 'ui.materialize','angular.img'])
     .constant('fireUrl', 'https://chaparralranch-9f43a.firebaseio.com')
     .constant('firePath', {
         lodge: 'Lodge',
@@ -16,6 +16,15 @@ chaparral = angular.module("Chaparral", ['ngRoute', 'ngTouch', 'firebase', 'ngFi
         monster: 'Monster',
         managment: 'Managment',
         gallery: 'Gallery'
+    })
+    .constant('api',{
+        storage:'http://localhost:8080/api/',
+        lodge: ',Lodge,',
+        season: ',Seasons,',
+        monster: ',Monster,',
+        managment: ',Managment,',
+        gallery: ',Gallery,',
+        token:'$2a$10$AmJmPhmI9F3j6crIFsJAiuvQpkgog.uDydGPV3J8w9DuNrTs.eW8O'
     })
     .run(["$rootScope", "$location", function($rootScope, $location) {
         $rootScope.$on("$routeChangeError", function(event, next, previous, error) {
