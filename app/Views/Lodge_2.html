@@ -1,8 +1,21 @@
 <div class="row" style="margin: 0px;padding:0px;border:none" ng-if="Lodge.length>0">
     <div class="col s12 m12 l12" style="margin: 0px;padding:0px;">
         </div>
-        <div class="slider">
+        <div id="slider_lodge" class="slider">
             <ul id="carousel_full" class="slides">
+                <li ng-repeat="item in Lodge" class="marco_container">
+                    <img id="img_LodgeAdmin_{{item.fire.$id}}" src="{{item.url}}">
+                    <div class="marco_slide">
+                        <div>
+                            <div class="caption left-align">
+                                <a href="javascript:$('.slider').slider('prev');" class="btn btn-floating brown darken-3 white-text" style="z-index: 10;position: absolute"><i class="material-icons">keyboard_arrow_left</i></a>
+                            </div>
+                            <div class="caption right-align">
+                                <a href="javascript:$('.slider').slider('next');" class="btn btn-floating brown darken-3 white-text" style="z-index: 10;position: absolute"><i class="material-icons">keyboard_arrow_right</i></a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
             </ul>
         </div>
     </div>

@@ -20,6 +20,14 @@
     <script src="scripts/materialize/materialize.js"></script>
     <script src="scripts/jquery/sweetalert.min.js"></script>
     <script src="scripts/angular/angular.js"></script>
+    <script src="scripts/gallery/blueimp-gallery.min.js"></script>
+    <script src="scripts/gallery/blueimp-gallery-fullscreen.js"></script>
+    <script src="scripts/gallery/blueimp-gallery-indicator.js"></script>
+    <script src="scripts/gallery/blueimp-gallery-video.js"></script>
+    <script src="scripts/gallery/blueimp-gallery-vimeo.js"></script>
+    <script src="scripts/gallery/blueimp-gallery-youtube.js"></script>
+    <script src="scripts/gallery/blueimp-helper.js"></script>
+    <script src="scripts/gallery/jquery.blueimp-gallery.js"></script>
     <!-- Firebase -->
     <script src="https://www.gstatic.com/firebasejs/3.6.7/firebase.js"></script>
     <!-- AngularFire -->
@@ -46,6 +54,9 @@
     <link rel="stylesheet" href="styles/style.css">
     <link rel="stylesheet" href="styles/SweetAlert/sweetalert.css">
     <link rel="stylesheet" href="styles/SweetAlert/facebook.css">
+    <link rel="stylesheet" href="styles/gallery/blueimp-gallery.min.css">
+    <link rel="stylesheet" href="styles/gallery/blueimp-gallery-indicator.css">
+    <link rel="stylesheet" href="styles/gallery/blueimp-gallery-video.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
@@ -114,7 +125,12 @@
         <section class="Wrapper-Section section scrollspy" id="Hunting">
             <div ng-include="'app/Views/Hunting_main.html'" style="margin: 0px;padding:0px;"></div>
         </section>
-        <section class="Wrapper-Section section scrollspy" style="background-color: red" id="Bucks"></section>
+        <section class="section scrollspy no-padding" id="Hunting_2">
+            <div ng-include="'app/Views/Hunting_slider.html'"></div>
+        </section>
+        <section class="section scrollspy no-padding" id="Bucks">
+            <div ng-include="'app/Views/Bucks.html'"></div>
+        </section>
         <section class="Wrapper-Section section scrollspy" id="Gallery">
             <div ng-include="'app/Views/Media.html'" style="margin: 0px;padding:0px;"></div>
         </section>
@@ -124,6 +140,15 @@
         <section class="Wrapper-Section section scrollspy" style="background-color: red" id="Contact">
             <div ng-include="'app/Views/Contact.html'" style="margin: 0px;padding:0px;"></div>
         </section>
+    </div>
+
+    <div id="blueimp-gallery" class="blueimp-gallery blueimp-gallery-controls">
+        <div class="slides"></div>
+        <h3 class="title"></h3>
+        <a class="prev border-none"><i class="material-icons center" style="font-size: inherit">keyboard_arrow_left</i></a>
+        <a class="next border-none"><i class="material-icons center" style="font-size: inherit">keyboard_arrow_right</i></a>
+        <a class="close"><i class="material-icons" style="font-size: inherit">close</i></a>
+        <a class="play-pause"><i class="material-icons" style="font-size: inherit">play_arrow</i></a>
     </div>
 </body>
 

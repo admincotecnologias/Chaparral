@@ -1,4 +1,4 @@
-chaparral.controller("HuntsCtrl", ["$filter", "$scope", '$location', "Upload", "fireFact", function($filter, $scope, $location, Upload, fireFact) {
+chaparral.controller("HuntsCtrl", ["$filter", "$scope", '$location', "Upload", "fireFact","$http", function($filter, $scope, $location, Upload, fireFact,$http) {
 
     //OBJECTS
     $scope.files_lodge;
@@ -35,41 +35,31 @@ chaparral.controller("HuntsCtrl", ["$filter", "$scope", '$location', "Upload", "
             console.log(path);
             for (i = 0; i < $files.length; i++) {
                 $scope.uploadLodge = true;
-                var file = $files[i];
-                file.name = fireFact.guid() + "." + file.name.split('.').pop();
-                var _storage = fireFact.fireStorage(path + $files[i].name);
-                var meta = {
-                    contentType: file.type,
-                    name: $files[i].name
-                };
-                var _uploadtask = _storage.$put(file, meta);
-                _uploadtask.$progress(function(snapshot) {
-                    $scope.uploadLodge = snapshot.state == "running" ? true : false;
-                });
-                _uploadtask.$complete(function(snapshot) {
-                    console.log(snapshot);
+                form = new FormData();
+                let dataFile = $files[i];
+                let file = new File([dataFile],dataFile.$ngfName,{type:dataFile.type});
+                form.append('files',file);
+                $http.post(fireFact.api.storage+fireFact.api.season,form,{transformRequest: angular.identity,headers: {
+                    'Content-Type': undefined}}).then(function (response_post) {
                     var _ref = fireFact.fireArray(fireFact.firePath.season + '/' + $scope.SelectType + '/Images');
                     var key = _ref.$add({
-                        ref: snapshot.metadata.name,
-                        url: snapshot.downloadURL,
+                        url: fireFact.api.storage+fireFact.api.season+'/'+response_post.data.filename,
                         type: $scope.SelectType,
-                        season: $scope.SelectPrincipal.tittle,
+                        season: fireFact.firePath.season,
                         description: $scope.descriptionImage != "" ? $scope.descriptionImage : null,
                         timestamp: Date.now()
                     }).then(function(response) {
-                        $scope.AllMonster.$ref();
-                        $scope.AllManagment.$ref();
-                        $scope.descriptionImage = $("#Desc_Hunt_Image").val() = "";
+                        $scope.clear();
                     }, function(error) {
                         Materialize.toast("Error undefined", 4000);
+                    }).catch(function (err) {
+                        console.log("error Firebase",err)
                     });
                     Materialize.toast("Upload Success", 4000);
-                });
-                _uploadtask.$error(function(error) {
-                    Materialize.toast("Error undefined", 4000);
-                });
+                }).catch(function (err) {
+                    console.log("error Post",err)
+                })
             }
-            $scope.clear();
         } else {
             Materialize.toast("Select a type", 5000);
         }
@@ -79,18 +69,13 @@ chaparral.controller("HuntsCtrl", ["$filter", "$scope", '$location', "Upload", "
         if ($scope.SelectType == null && $scope.TittleCreate != "" && $scope.descriptionCreate != "") {
             var path = fireFact.firePath.season + '/' + $scope.TittleCreate + '/';
             $scope.uploadLodge = true;
-            $file.name = fireFact.guid() + "." + $file.name.split('.').pop();
-            var _storage = fireFact.fireStorage(path + $file.name);
-            var meta = {
-                contentType: $file.type,
-                name: $file.name
-            };
-            var _uploadtask = _storage.$put($file, meta);
-            _uploadtask.$progress(function(snapshot) {
-                $scope.uploadLodge = snapshot.state == "running" ? true : false;
-            });
-            _uploadtask.$complete(function(snapshot) {
-                console.log(snapshot);
+            form = new FormData();
+            let file = new File([$file],$file.$ngfName,{type:$file.type});
+            console.log(file,$file)
+            form.append('files',file);
+            $http.post(fireFact.api.storage+fireFact.api.season,form,{transformRequest: angular.identity,headers: {
+                'Content-Type': undefined}}).then(function (response_post) {
+                console.log(response_post);
                 var _ref = fireFact.fireArray(fireFact.firePath.season);
                 _ref.$add({
                     tittle: $scope.TittleCreate,
@@ -99,8 +84,7 @@ chaparral.controller("HuntsCtrl", ["$filter", "$scope", '$location', "Upload", "
                     var key = response.key;
                     var _ref2 = fireFact.fireArray(fireFact.firePath.season + '/' + key + '/Images');
                     _ref2.$add({
-                        ref: snapshot.metadata.name,
-                        url: snapshot.downloadURL,
+                        url: fireFact.api.storage+fireFact.api.season+'/'+response_post.data.filename,
                         type: fireFact.firePath.season,
                         season: $scope.TittleCreate,
                         timestamp: Date.now()
@@ -115,8 +99,7 @@ chaparral.controller("HuntsCtrl", ["$filter", "$scope", '$location', "Upload", "
                         description: $scope.descriptionCreate,
                         season: response.key,
                         image: {
-                            ref: snapshot.metadata.name,
-                            url: snapshot.downloadURL,
+                            url: fireFact.api.storage+fireFact.api.season+'/'+response_post.data.filename,
                             type: fireFact.firePath.season,
                             season: $scope.TittleCreate,
                             timestamp: Date.now()
@@ -129,9 +112,6 @@ chaparral.controller("HuntsCtrl", ["$filter", "$scope", '$location', "Upload", "
                 });
                 Materialize.toast("Upload Success", 4000);
             });
-            _uploadtask.$error(function(error) {
-                Materialize.toast("Error undefined", 4000);
-            });
             $scope.clear();
         } else {
             Materialize.toast("Select a type", 5000);
@@ -139,23 +119,21 @@ chaparral.controller("HuntsCtrl", ["$filter", "$scope", '$location', "Upload", "
     }
     $scope.DeleteImageHunts = function(item) {
         console.log(item)
-        var firedelete = fireFact.fireStorage(fireFact.firePath.season + '/' + $scope.SelectPrincipal.tittle + '/' + item.ref);
-        firedelete.$delete().then(function(response) {
-            var fireObject = fireFact.fireRef(fireFact.firePath.season + '/' + $scope.SelectType + '/Images' + '/' + item.$id);
-            fireObject.$remove().then(function(ref) {
-                Materialize.toast("Deleted Success", 4000);
-            }, function(error) {
-                Materialize.toast("Server Error", 4000);
-            });
+        $http.delete(item.url).then(function (response) {
+            if(response.data.error==false){
+                var fireObject = fireFact.fireRef(fireFact.firePath.season + '/' + $scope.SelectType + '/Images' + '/' + item.$id);
+                fireObject.$remove().then(function(ref) {
+                    Materialize.toast("Deleted Success", 4000);
+                }, function(error) {
+                    Materialize.toast("Server Error", 4000);
+                });
+            }
         });
-        firedelete = null;
         fireObject = null;
         $scope.SelectAlbum.$ref();
     }
     $scope.setPrincipal = function(item) {
-        console.log(item);
         var principal = fireFact.fireRef(fireFact.firePath.season + '/All/' + $scope.SelectPrincipal.$id + '/image');
-        principal.ref = item.ref;
         principal.url = item.url;
         principal.season = item.season;
         principal.timestamp = item.timestamp;
@@ -193,9 +171,8 @@ chaparral.controller("HuntsCtrl", ["$filter", "$scope", '$location', "Upload", "
         $scope.SelectPrincipal = id;
         $scope.SelectAlbum = fireFact.fireArray(fireFact.firePath.season + '/' + season + '/Images');
     }
-    $scope.viewModal = function(url) {
-        console.log(url);
-        $("#modalBucks").attr("src", url);
+    $scope.viewModal = function(id) {
+        $("#modalBucks").attr("src", $(id).attr('src'));
         $('#modalFoto_Bucks').modal('open');
     }
     $scope.GetBucks = function() {

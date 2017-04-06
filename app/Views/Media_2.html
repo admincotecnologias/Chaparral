@@ -1,18 +1,21 @@
-<div class="row" style="margin: 0px;padding:0px;border:none" ng-if="Lodge.length>0">
+<div class="row" style="margin: 0px;padding:0px;border:none" ng-if="gallery.length>0">
     <div class="col s12 m12 l12" style="margin: 0px;padding:0px;">
-        <div id="slider_Media" class="carousel carousel-slider" style="margin: 0px;padding:0px;">
-            <div class="carousel-fixed-item center container show-on-large hide-on-med-and-down" style="z-index: 3">
-                <a class="btn-floating waves-effect waves-yellow grey darken-4" onclick="$('#slider_Media').carousel('prev');"><i class="material-icons white-text">keyboard_arrow_left</i></a>
-                <a class="btn-floating waves-effect waves-yellow grey darken-4" onclick="$('#slider_Media').carousel('next');"><i class="material-icons white-text">keyboard_arrow_right</i></a>
-            </div>
-            <div class="carousel-fixed-item center container show-on-medium-and-down hide-on-large-only" style="z-index: 3">
-                <a class="btn-floating btn-large left waves-effect waves-yellow grey darken-4" onclick="$('#slider_Media').carousel('prev');"><i class="material-icons white-text">keyboard_arrow_left</i></a>
-                <a class="btn-floating btn-large right waves-effect waves-yellow grey darken-4" onclick="$('#slider_Media').carousel('next');"><i class="material-icons white-text">keyboard_arrow_right</i></a>
-            </div>
-            <div class="marco_container">
-                <div class="marco_slide"></div>
-            </div>
-            <a class="carousel-item" href="#A{{item.$id}}" ng-repeat="item in gallery"><img src="{{item.url}}"></a>
-        </div>
+    </div>
+    <div id="slider_Media" class="slider">
+        <ul id="carousel_full" class="slides">
+            <li ng-repeat="item in gallery" class="marco_container">
+                <img id="img_Media_{{item.$id}}" httpSrc="{{item.url}}">
+                <div class="marco_slide">
+                    <div>
+                        <div class="caption left-align">
+                            <a href="javascript:$('.slider').slider('prev');" class="btn btn-floating brown darken-3 white-text" style="z-index: 10;position: absolute"><i class="material-icons">keyboard_arrow_left</i></a>
+                        </div>
+                        <div class="caption right-align">
+                            <a href="javascript:$('.slider').slider('next');" class="btn btn-floating brown darken-3 white-text" style="z-index: 10;position: absolute"><i class="material-icons">keyboard_arrow_right</i></a>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        </ul>
     </div>
 </div>

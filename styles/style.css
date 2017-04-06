@@ -132,7 +132,7 @@ div.toast {
 }
 
 .filter-about {
-    background: rgba(111, 74, 42, .30);
+    background: rgba(111, 74, 42, .30) !important;
     z-index: 10;
 }
 
@@ -290,4 +290,13 @@ div.toast {
 
 .card .card-image img {
     height: 100%;
+}
+.slider .indicators{
+    z-index: 5;
+}
+.slider{
+    height: auto;
+}
+.border-none{
+    border: none !important;
 }

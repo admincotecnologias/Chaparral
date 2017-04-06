@@ -1,0 +1,30 @@
+<div class="row no-padding border-none" style="margin: 0" ng-if="Seasons.length>0">
+    <div class="col s12 m12 l12 no-padding">
+        <div id="slider_Seasons" class="slider">
+            <ul id="carousel_full" class="slides">
+                <li ng-repeat="item in Seasons" class="marco_container">
+                    <img id="img_LodgeAdmin_{{item.fire.$id}}" src="{{item.url}}" >
+                    <div class="marco_slide filter-about" style="height: 100%;width: 100%">
+                        <div>
+                            <div class="caption left-align">
+                                <a href="javascript:$('.slider').slider('prev');" class="btn btn-floating brown darken-3 white-text" style="z-index: 10;position: absolute"><i class="material-icons">keyboard_arrow_left</i></a>
+                            </div>
+                            <div class="caption center-align" style="top: 15%;">
+                                <h3>{{item.fire.tittle}}</h3>
+                                <hr noshade="noshade" width="15%" align="center" style="background-color:#dddddd;border:none; height: 5px;margin-top:5%;margin-bottom: 5%;" />
+                                <h5 class="light grey-text text-lighten-3">{{item.fire.description}}</h5>
+                                <br>
+                                <div style="width: auto; height: auto;position: relative;text-align: center;">
+                                    <a href="#" ng-click="GetAllSeason(item.fire)"><img src="images/view.png" class="responsive-img mouse" style="width: 10vh;height: auto;"></a>
+                                </div>
+                            </div>
+                            <div class="caption right-align">
+                                <a href="javascript:$('.slider').slider('next');" class="btn btn-floating brown darken-3 white-text" style="z-index: 10;position: absolute"><i class="material-icons">keyboard_arrow_right</i></a>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

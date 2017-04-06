@@ -38,10 +38,10 @@
                 <div class="col s4" ng-repeat="item in AllLodge">
                     <div class="card z-depth-3">
                         <div class="card-image center-block">
-                            <img ng-click="viewModal(item.url)" src="{{item.url}}" class="materialboxed responsive-img" width="400" style="height: 100%">
+                            <img id="media_{{item.$id}}" ng-click="viewModal(item,'#media_'+item.$id)" httpsrc="{{item.url}}" class="materialboxed responsive-img" width="400" style="height: 100%">
                         </div>
                         <div class="card-action fixed center-align">
-                            <a class="btn brown white-text" ng-click="DeleteImage(item.ref,item.$id)">Delete</a>
+                            <a class="btn brown white-text" ng-click="DeleteImage(item,'#media_'+item.$id)">Delete</a>
                         </div>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-chaparral.controller("BucksCtrl", ["$filter", "$scope", '$location', "Upload", "fireFact", function($filter, $scope, $location, Upload, fireFact) {
+chaparral.controller("BucksCtrl", ["$http","$filter", "$scope", '$location', "Upload", "fireFact", function($http,$filter, $scope, $location, Upload, fireFact) {
 
     //OBJECTS
     $scope.files_lodge;
@@ -20,101 +20,73 @@ chaparral.controller("BucksCtrl", ["$filter", "$scope", '$location', "Upload", "
         $("#file_bucks").val("");
     }
     $scope.onFileSelected = function($files) {
-        if ($scope.SelectType != null) {
-            var path = $scope.SelectType + '/';
+        $scope.SelectType = $("#Sel_Bucks").parent('div').children('input.select-dropdown').val();
+        var fireRef = $scope.SelectType;
+        var path = fireFact.api[fireRef];
+        if($scope.SelectType != null && $files.length>0){
+            var dataImage=[];
             for (i = 0; i < $files.length; i++) {
-                $scope.uploadLodge = true;
-                var file = $files[i];
-                file.name = fireFact.guid() + "." + file.name.split('.').pop();
-                var _storage = fireFact.fireStorage(path + $files[i].name);
-                var meta = {
-                    contentType: file.type,
-                    name: $files[i].name
-                };
-                var _uploadtask = _storage.$put(file, meta);
-                _uploadtask.$progress(function(snapshot) {
-                    $scope.uploadLodge = snapshot.state == "running" ? true : false;
-                });
-                _uploadtask.$complete(function(snapshot) {
-                    console.log(snapshot);
-                    var _ref = fireFact.fireArray($scope.SelectType + '/Images');
-                    var key = _ref.$add({
-                        ref: snapshot.metadata.name,
-                        url: snapshot.downloadURL,
-                        type: $scope.SelectType,
-                        timestamp: Date.now()
-                    }).then(function(response) {
-                        $scope.AllMonster.$ref();
-                        $scope.AllManagment.$ref();
-                    }, function(error) {
-                        Materialize.toast("Error undefined", 4000);
-                    });
-                    Materialize.toast("Upload Success", 4000);
-                });
-                _uploadtask.$error(function(error) {
-                    Materialize.toast("Error undefined", 4000);
-                });
+                form = new FormData();
+                let dataFile = $files[i];
+                let file = new File([dataFile],dataFile.$ngfName,{type:dataFile.type});
+                form.append('files',file);
+                var fire = fireFact.fireArray(fireRef);
+                $http.post(fireFact.api.storage+path,form,{transformRequest: angular.identity,headers: {
+                    'Content-Type': undefined}}).then(function(response){
+                        console.log(response)
+                    fire.$add({
+                        root:fireRef,
+                        filename:file.name,
+                        type: file.type,
+                        url:fireFact.api.storage+path+'/'+response.data.filename
+                    }).then(function (ref) {
+                    })
+                },function(error){
+                    console.log(error)
+                })
             }
             $scope.clear();
-        } else {
-            Materialize.toast("Select a type", 5000);
         }
     }
-    $scope.DeleteImageBucks = function(ref, uid, type) {
-        var firedelete = fireFact.fireStorage(type + '/' + ref);
-        firedelete.$delete().then(function(response) {
-            var fireObject = fireFact.fireRef(type + '/Images' + '/' + uid);
-            fireObject.$remove().then(function(ref) {
-                Materialize.toast("Deleted Success", 4000);
-            }, function(error) {
-                Materialize.toast("Server Error", 4000);
-            });
-        });
+    $scope.DeleteImageBucks = function(item) {
+        $http.delete(item.url).then(function (response) {
+            if(response.data.error == false){
+                var fireObject = fireFact.fireRef(item.root + '/' + item.$id);
+                fireObject.$remove().then(function(ref) {
+                    Materialize.toast("Deleted Success", 4000);
+                }, function(error) {
+                    Materialize.toast("Server Error", 4000);
+                });
+            }else{
+                Materialize.toast("Error al eliminar",5000)
+            }
+        },function (error) {
+            Materialize.toast("Error con el Servidor",5000)
+        })
         firedelete = null;
         fireObject = null;
-        $scope.AllMonster.$ref();
-        $scope.AllManagment.$ref();
+        $scope.AllLodge.$ref();
     }
-    $scope.setPrincipal = function(uid, type) {
-        console.log(uid, type);
-        var firePrincipal = fireFact.fireRef(type);
-        var fireSelect = fireFact.fireRef(type + '/Images' + '/' + uid);
-        fireSelect.$loaded().then(function(data) {
-            console.log(data);
-            var object = {
-                ref: data.ref,
-                url: data.url,
-                type: data.type,
-                timestamp: data.timestamp
-            };
-            console.log(object);
-            firePrincipal.Principal = object;
-            firePrincipal.$save().then(function(ref) {
-                $scope.GetBucks();
-                Materialize.toast("Principal selected", 4000);
-            }, function(error) {
-                console.log(error)
-            });
+    $scope.setPrincipal = function(item) {
+        var firePrincipal = fireFact.fireRef(fireFact.firePath.principal+'/'+item.root);
+        firePrincipal.root = item.root;
+        firePrincipal.url = item.url;
+        firePrincipal.filename = item.filename;
+        firePrincipal.type = item.type;
+        firePrincipal.$save().then(function(ref) {
+            Materialize.toast("Guardado",4000); // true
+        }, function(error) {
+            console.log("Error:", error);
         });
     }
-    $scope.viewModal = function(url) {
-        console.log(url);
-        $("#modalBucks").attr("src", url);
+    $scope.viewModal = function(id) {
+        console.log(id);
+        $("#modalBucks").attr("src", $(id).attr('src'));
         $('#modalFoto_Bucks').modal('open');
     }
     $scope.GetBucks = function() {
-        $scope.AllMonster = fireFact.fireArray(fireFact.firePath.monster + '/Images');
-        $scope.AllManagment = fireFact.fireArray(fireFact.firePath.managment + '/Images');
-        fireFact.fireRef(fireFact.firePath.monster + '/Principal').$loaded().then(function(data) {
-            $scope.PrincipalMonster = data;
-            fireFact.fireRef(fireFact.firePath.managment + '/Principal').$loaded().then(function(data) {
-                $scope.PrincipalManagment = data;
-                $(document).ready(function() {
-                    $('select').material_select('destroy');
-                    $('select').material_select();
-                });
-            });
-        });
+        $scope.AllMonster = fireFact.fireArray(fireFact.firePath.monster);
+        $scope.AllManagment = fireFact.fireArray(fireFact.firePath.managment);
     }
     $scope.GetBucks();
 }]);

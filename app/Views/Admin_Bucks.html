@@ -6,32 +6,34 @@
             <div class="card-content">
                 <div class="row">
                     <div class="input-field col s12 m12">
-                        <select class="icons" ng-model="SelectType">
-                        <option value="{{SelectType}}" disabled selected>Choose your option</option>
-                        <option id="optMonster" value="{{monster}}" data-icon="{{PrincipalMonster.url}}" class="circle">Monster</option>
-                        <option id="optManagment" value="{{managment}}" data-icon="{{PrincipalManagment.url}}" class="circle">Managment</option>
-                    </select>
+                        <select id="Sel_Bucks" class="icons" ng-model="SelectType">
+                            <option value="{{SelectType}}" disabled selected>Choose your option</option>
+                            <option id="optMonster" value="{{fireFact.api.monster}}" class="circle">Monster</option>
+                            <option id="optManagment" value="{{fireFact.api.managment}}" class="circle">Managment</option>
+                        </select>
                         <label>Select Type:</label>
                     </div>
                 </div>
-                <h6>Upload File to Album:</h6>
-                <form action="#">
-                    <div class="file-field input-field">
-                        <div class="btn brown darken-4">
-                            <span class="white-text">File</span>
-                            <input class="black-text" type="file" ng-model="files_lodge" ngf-select multiple ngf-resize="{ ratio: '1:4',type: 'image/jpeg',centerCrop: true, pattern='.jpg', restoreExif: false}">
+                <div class="row">
+                    <h6>Upload File to Album:</h6>
+                    <form action="#">
+                        <div class="file-field input-field">
+                            <div class="btn brown darken-4">
+                                <span class="white-text">File</span>
+                                <input class="black-text" type="file" ng-model="files_lodge" ngf-select multiple ngf-resize="{ ratio: '1:4',type: 'image/jpeg',centerCrop: true, pattern='.jpg', restoreExif: false}">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input id="file_bucks" class="file-path black-text validate" type="text">
+                            </div>
                         </div>
-                        <div class="file-path-wrapper">
-                            <input id="file_bucks" class="file-path black-text validate" type="text">
+                        <div class="row">
+                            <div class="center">
+                                <a class="btn brown white-text" ng-click="onFileSelected(files_lodge)">Upload</a>
+                                <a ng-click="clear()" class="btn red darken-3 white-text">Clear</a>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="center">
-                            <a class="btn brown white-text" ng-click="onFileSelected(files_lodge)">Upload</a>
-                            <a ng-click="clear()" class="btn red darken-3 white-text">Clear</a>
-                        </div>
-                    </div>
-                </form>
+                    </form>
+                </div>
                 <div class="row" ng-show="uploadLodge==true">
                     <div class="progress">
                         <div id="progressLodge" class="indeterminate"></div>
@@ -51,11 +53,11 @@
                 <div class="col s4" ng-repeat="item in AllMonster">
                     <div class="card z-depth-3">
                         <div class="card-image center-block">
-                            <img ng-click="viewModal(item.url)" src="{{item.url}}" class="materialboxed responsive-img" width="400" style="height: 100%">
+                            <img id="admin_Bucks_{{item.$id}}" ng-click="viewModal('#admin_Bucks_'+item.$id)" httpsrc="{{item.url}}" class="materialboxed responsive-img" width="400" style="height: 100%">
                         </div>
                         <div class="card-action fixed">
-                            <a class="btn brown white-text" ng-click="DeleteImageBucks(item.ref,item.$id,item.type)">Delete</a>
-                            <a class="btn brown darken-4 white-text" ng-click="setPrincipal(item.$id,item.type)"><i class="material-icons">photo_album</i></a>
+                            <a class="btn brown white-text" ng-click="DeleteImageBucks(item,fireFact.firePath.monster)">Delete</a>
+                            <a class="btn brown darken-4 white-text" ng-click="setPrincipal(item)"><i class="material-icons">photo_album</i></a>
                         </div>
                     </div>
                 </div>
@@ -67,11 +69,11 @@
                 <div class="col s4" ng-repeat="item in AllManagment">
                     <div class="card z-depth-3">
                         <div class="card-image center-block">
-                            <img ng-click="viewModal(item.url)" src="{{item.url}}" class="materialboxed responsive-img" width="400" style="height: 100%">
+                            <img id="admin_Manag_{{item.$id}}" ng-click="viewModal('admin_Manag_'+item.$id)" httpsrc="{{item.url}}" class="materialboxed responsive-img" width="400" style="height: 100%">
                         </div>
                         <div class="card-action fixed center-align">
-                            <a class="btn brown white-text" ng-click="DeleteImageBucks(item.ref,item.$id,item.type)">Delete</a>
-                            <a class="btn brown darken-4 white-text" ng-click="setPrincipal(item.$id,item.type)"><i class="material-icons">photo_album</i></a>
+                            <a class="btn brown white-text" ng-click="DeleteImageBucks(item,fireFact.firePath.managment)">Delete</a>
+                            <a class="btn brown darken-4 white-text" ng-click="setPrincipal(item)"><i class="material-icons">photo_album</i></a>
                         </div>
                     </div>
                 </div>
@@ -90,5 +92,6 @@
 <script>
     $(document).ready(function() {
         $('.modal').modal();
+        $('select').material_select();
     });
 </script>

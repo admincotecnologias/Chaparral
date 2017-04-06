@@ -1,4 +1,4 @@
-chaparral.controller("MediaCtrl", ["$filter", "$scope", '$location', "Upload", "fireFact", function($filter, $scope, $location, Upload, fireFact) {
+chaparral.controller("MediaCtrl", ["$http","$filter", "$scope", '$location', "Upload", "fireFact", function($http,$filter, $scope, $location, Upload, fireFact) {
 
     //OBJECTS
     $scope.files_lodge;
@@ -13,55 +13,49 @@ chaparral.controller("MediaCtrl", ["$filter", "$scope", '$location', "Upload", "
         $("#file_lodge").val("");
     }
     $scope.onFileSelected = function($files, path) {
+        var dataImage=[];
         for (i = 0; i < $files.length; i++) {
-            $scope.uploadLodge = true;
-            var file = $files[i];
-            file.name = fireFact.guid() + "." + file.name.split('.').pop();
-            var _storage = fireFact.fireStorage(path + $files[i].name);
-            var meta = {
-                contentType: file.type,
-                name: $files[i].name
-            };
-            var _uploadtask = _storage.$put(file, meta);
-            _uploadtask.$progress(function(snapshot) {
-                $scope.uploadLodge = snapshot.state == "running" ? true : false;
-            });
-            _uploadtask.$complete(function(snapshot) {
-                console.log(snapshot);
-                var _ref = fireFact.fireArray(fireFact.firePath.gallery);
-                var key = _ref.$add({
-                    ref: snapshot.metadata.name,
-                    url: snapshot.downloadURL,
-                    timestamp: Date.now()
-                }).then(function(response) {
-                    $scope.AllLodge.$ref();
-                }, function(error) {
-                    Materialize.toast("Error undefined", 4000);
-                });
-                Materialize.toast("Upload Success", 4000);
-            });
-            _uploadtask.$error(function(error) {
-                Materialize.toast("Error undefined", 4000);
-            });
+            form = new FormData();
+            let dataFile = $files[i];
+            let file = new File([dataFile],dataFile.$ngfName,{type:dataFile.type});
+            form.append('files',file);
+            var fire = fireFact.fireArray(fireFact.firePath.gallery);
+            $http.post(fireFact.api.storage+fireFact.api.gallery,form,{transformRequest: angular.identity,headers: {
+                'Content-Type': undefined}}).then(function(response){
+                fire.$add({
+                    filename:file.name,
+                    type: file.type,
+                    url:fireFact.api.storage+fireFact.api.gallery+'/'+response.data.filename
+                }).then(function (ref) {
+                })
+            },function(error){
+                console.log(error)
+            })
         }
         $scope.clear();
     }
-    $scope.DeleteImage = function(ref, uid) {
-        var firedelete = fireFact.fireStorage(fireFact.firePath.gallery + '/' + ref);
-        firedelete.$delete().then(function(response) {
-            var fireObject = fireFact.fireRef(fireFact.firePath.gallery + '/' + uid);
-            fireObject.$remove().then(function(ref) {
-                Materialize.toast("Deleted Success", 4000);
-            }, function(error) {
-                Materialize.toast("Server Error", 4000);
-            });
-        });
+    $scope.DeleteImage = function(item) {
+        $http.delete(item.url).then(function (response) {
+            if(response.data.error == false){
+                var fireObject = fireFact.fireRef(fireFact.firePath.gallery + '/' + item.$id);
+                fireObject.$remove().then(function(ref) {
+                    Materialize.toast("Deleted Success", 4000);
+                }, function(error) {
+                    Materialize.toast("Server Error", 4000);
+                });
+            }else{
+                Materialize.toast("Error al eliminar",5000)
+            }
+        },function (error) {
+            Materialize.toast("Error con el Servidor",5000)
+        })
         firedelete = null;
         fireObject = null;
         $scope.AllLodge.$ref();
     }
-    $scope.viewModal = function(url) {
-        $("#modalMedia").attr("src", url);
+    $scope.viewModal = function(item,id) {
+        console.log(id)
+        $("#modalMedia").attr("src", $(id).attr("src"));
         $('#modalFoto_Admin').modal('open');
     }
     $scope.GetLodge = function() {

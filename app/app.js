@@ -15,16 +15,19 @@ chaparral = angular.module("Chaparral", ['ngRoute', 'ngTouch', 'firebase', 'ngFi
         season: 'Seasons',
         monster: 'Monster',
         managment: 'Managment',
-        gallery: 'Gallery'
+        gallery: 'Gallery',
+        principal:'Principal'
     })
     .constant('api',{
-        storage:'http://localhost:8080/api/',
+        storage:'http://192.168.1.18:8133/api/',
+        //storage:'http://localhost:8080/api/',
         lodge: ',Lodge,',
         season: ',Seasons,',
-        monster: ',Monster,',
-        managment: ',Managment,',
+        Monster: ',Monster,',
+        Managment: ',Managment,',
         gallery: ',Gallery,',
-        token:'$2a$10$AmJmPhmI9F3j6crIFsJAiuvQpkgog.uDydGPV3J8w9DuNrTs.eW8O'
+        token:'$2a$10$AUE9EPGQTJMD8fzr1XZ6fuaNXCWm.yOWQoYcOTGC6PvjEB1PqPVpi'
+        //token:'$2a$10$AmJmPhmI9F3j6crIFsJAiuvQpkgog.uDydGPV3J8w9DuNrTs.eW8O'
     })
     .run(["$rootScope", "$location", function($rootScope, $location) {
         $rootScope.$on("$routeChangeError", function(event, next, previous, error) {
