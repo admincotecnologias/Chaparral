@@ -60,7 +60,18 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
-<body ng-controller="Main">
+<body ng-controller="Main" class="body_loader">
+<!-- Preloader -->
+<div id="preloader" class="valign-wrapper row brown darken-2">
+    <div id="status" class="valign col s8 m8 l6 center center-align">
+        <img src="images/logo2.png" class="responsive-img center center-align">
+        <br><br>
+        <div class="progress">
+            <div id="loaderbar" class="determinate brown darken-4" style="width: {{TotalPage}}%"></div>
+        </div>
+    </div>
+</div>
+
     <div ng-view ng-hide="checkRoute('Login')"></div>
     <div ng-show="isRoot.length===0">
         <!-- NAVBAR START !-->
@@ -71,19 +82,19 @@
                         <img class="responsive-img" src="images/logo2.png">
                     </a>
                     <ul class="left hide-on-med-and-down section table-of-contents">
-                        <li><a href="#Home" class="white-text center center-align" style="width: 30vh">HOME</a></li>
+                        <li><a href="#Home" class="white-text center center-align" style="width: 10vw">HOME</a></li>
                         <li class="hide">
-                            <a id="what_we" href="#What" class="white-text center center-align" style="width: 30vh">ABOUT US</a>
+                            <a id="what_we" href="#What" class="white-text center center-align" style="width: 10vw">ABOUT US</a>
                         </li>
-                        <li><a href="#Lodge" class="white-text center center-align" style="width: 30vh">LODGE</a></li>
-                        <li><a href="#Hunting" class="white-text center center-align" style="width: 30vh">HUNTING</a></li>
+                        <li><a href="#Lodge" class="white-text center center-align" style="width: 10vw">LODGE</a></li>
+                        <li><a href="#Hunting" class="white-text center center-align" style="width: 10vw">HUNTING</a></li>
                     </ul>
                     <ul class="right hide-on-med-and-down section table-of-contents">
-                        <li><a href="#Bucks" class="white-text center center-align" style="width: 30vh">BUCKS</a></li>
-                        <li><a href="#Gallery" class="white-text center center-align" style="width: 30vh">GALLERY</a></li>
-                        <li><a href="#Contact" class="white-text center center-align" style="width: 30vh">CONTACT</a></li>
+                        <li><a href="#Bucks" class="white-text center center-align" style="width: 10vw">BUCKS</a></li>
+                        <li><a href="#Gallery" class="white-text center center-align" style="width: 10vw">GALLERY</a></li>
+                        <li><a href="#Contact" class="white-text center center-align" style="width: 10vw">CONTACT</a></li>
                     </ul>
-                    <ul id="slide-out" class="side-nav section table-of-contents z-depth-5">
+                    <ul id="slide-out" class="side-nav section brown darken-4 z-depth-5">
                         <li><a href="#Home" class="white-text">HOME</a></li>
                         <li><a href="#Lodge" class="white-text">LODGE</a></li>
                         <li><a href="#Hunting" class="white-text">HUNTING</a></li>

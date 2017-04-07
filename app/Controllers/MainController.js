@@ -9,14 +9,14 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
             location.reload();
         });
     }
+    $scope.loaderPage = false;
+    $scope.TotalPage = 0;
     $scope.Seasons = [];
     $scope.Lodge = [];
     $scope.gallery = [];
     $scope.height = screen.height;
     $scope.principal = [];
     $scope.PrincipalArray = null;
-    $scope.totalLodge = 0;
-    $scope.totalGallery = 0;
     $scope.GetLodge = function() {
         var Lodge = fireFact.fireArray(fireFact.firePath.lodge);
         Lodge.$loaded().then(function (x) {
@@ -45,7 +45,9 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
                         $scope.Lodge.push({fire:item.fire,url:url})
                     }
                 });
+                $scope.TotalPage += 25;
                 $(document).ready(function () {
+                    console.log('lodge',$scope.TotalPage)
                     $('#slider_lodge').slider({
                         indicators:false,
                         height:550
@@ -83,7 +85,9 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
                         $scope.gallery.push({fire:item.fire,url:url})
                     }
                 });
+                $scope.TotalPage += 25;
                 $(document).ready(function () {
+                    console.log('gallery',$scope.TotalPage)
                     $('#slider_Media').slider({
                         indicators:false,
                         height:550
@@ -114,7 +118,6 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
             }
             $q.all(galArray).then(function (responses) {
                 angular.forEach(responses,function (item,index) {
-                    console.log("responses",responses)
                     if(item){
                         var blob = new Blob(
                             [ item.res.data ],
@@ -124,8 +127,9 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
                         $scope.Seasons.push({fire:item.fire,url:url})
                     }
                 });
-                console.log("Seasons",$scope.Seasons)
+                $scope.TotalPage += 25;
                 $(document).ready(function () {
+                    console.log('season',$scope.TotalPage)
                     $('#slider_Seasons').slider({
                         indicators:false,
                         height:550
@@ -139,28 +143,49 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
     }
     $scope.GetPrincipal = function() {
         $scope.PrincipalArray = fireFact.fireArray(fireFact.firePath.principal);
+        var requests = [];
         $scope.PrincipalArray.$loaded().then(function (x) {
             for(var i = 0;i<x.length;i++){
                 let url = x[i].url;
                 let val = x[i];
-                $http.get(url, {
-                    responseType: 'arraybuffer',
-                    headers: {
-                        'accept': 'image/webp,image/*,*/*;q=0.8'
-                    }
-                })
-                    .then(function (response) {
-                        var blob = new Blob(
-                            [ response.data ],
-                            { type: response.headers('Content-Type') }
-                        );
-                        //$scope.objectURL = URL.createObjectURL(blob);
-                        let data = URL.createObjectURL(blob)
-                        $scope.principal.push({fire:val,url:data})
-                    },function(error){
-                        console.log('error');
-                    });
+                requests.push(
+                    $http.get(url, {
+                        responseType: 'arraybuffer',
+                        headers: {
+                            'accept': 'image/webp,image/*,*/*;q=0.8'
+                        }
+                    })
+                        .then(function (response) {
+                            var blob = new Blob(
+                                [ response.data ],
+                                { type: response.headers('Content-Type') }
+                            );
+                            //$scope.objectURL = URL.createObjectURL(blob);
+                            let data = URL.createObjectURL(blob)
+                            return {fire:val,url:data}
+                        }).catch(function (err) {
+                        return null;
+                    }));
             }
+            $q.all(requests).then(function (responses) {
+                $scope.TotalPage += 25;
+                for(let i =0;i<responses.length;i++){
+                    if(responses[i]){
+                        switch (responses[i].fire.root){
+                            case 'Managment': {
+                                $("#management_bucks").attr('style','background: url('+responses[i].url+') no-repeat center !important;background-size: cover !important;');
+                                break;
+                            }
+                            case "Monster":{
+                                $("#monster_bucks").attr('style','background: url('+responses[i].url+') no-repeat center !important;background-size: cover !important;');
+                                break;
+                            }default: break;
+                        }
+                    }
+                }
+            }).catch(function (err) {
+                console.log(err);
+            })
         }).catch(function (error) {
             console.log(error)
         });
@@ -168,6 +193,10 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
     $scope.GetAllMonster = function () {
         var monster = fireFact.fireArray(fireFact.firePath.monster);
         monster.$loaded().then(function (x) {
+            $("#preloader").attr('style','background: rgba(111, 74, 42, .60) !important;');
+            $("#preloader").show();
+            $("#loaderbar").removeClass('determinate');
+            $("#loaderbar").addClass('indeterminate');
             var monArray = [];
             for(let i = 0;i<monster.length;i++){
                 let promise = $http.get(x[i].url,{
@@ -195,6 +224,7 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
                         album.push({title:item.fire.root,href:url,type:item.fire.type,thumbnail:url})
                     }
                 });
+                $("#preloader").hide();
                 var Gallery = blueimp.Gallery(album);
             }).catch(function (err) {
                 console.log(err)
@@ -205,6 +235,10 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
         var monster = fireFact.fireArray(fireFact.firePath.managment);
         monster.$loaded().then(function (x) {
             var monArray = [];
+            $("#preloader").attr('style','background: rgba(111, 74, 42, .60) !important;');
+            $("#preloader").show();
+            $("#loaderbar").removeClass('determinate');
+            $("#loaderbar").addClass('indeterminate');
             for(let i = 0;i<monster.length;i++){
                 let promise = $http.get(x[i].url,{
                     responseType: 'arraybuffer',
@@ -231,6 +265,7 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
                         album.push({title:item.fire.root,href:url,type:item.fire.type,thumbnail:url})
                     }
                 });
+                $("#preloader").hide();
                 var Gallery = blueimp.Gallery(album);
             }).catch(function (err) {
                 console.log(err)
@@ -238,10 +273,13 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
         });
     }
     $scope.GetAllSeason = function (item) {
-        console.log(item)
         var monster = fireFact.fireArray(fireFact.firePath.season + '/' + item.season + '/Images');
         monster.$loaded().then(function (x) {
             var monArray = [];
+            $("#preloader").attr('style','background: rgba(111, 74, 42, .60) !important;');
+            $("#preloader").show();
+            $("#loaderbar").removeClass('determinate');
+            $("#loaderbar").addClass('indeterminate');
             for(let i = 0;i<monster.length;i++){
                 let promise = $http.get(x[i].url,{
                     responseType: 'arraybuffer',
@@ -267,29 +305,19 @@ chaparral.controller('Main', function($scope, $location, $document, fireFact,$ht
                         album.push({title:item.fire.description,href:url,type:item.fire.type,thumbnail:url})
                     }
                 });
+                $("#preloader").hide();
                 var Gallery = blueimp.Gallery(album);
             }).catch(function (err) {
                 console.log(err)
             });
         });
     }
-    $scope.$watch('principal', function (newValue, oldValue) {
-        if($scope.PrincipalArray!=null && newValue.length== $scope.PrincipalArray.length){
-            for(var i = 0;i<newValue.length;i++){
-                let item = newValue[i];
-                switch (item.fire.root){
-                    case 'Managment': {
-                        $("#management_bucks").attr('style','background: url('+item.url+') no-repeat center;background-size: cover;height:100vh;');
-                        break;
-                    }
-                    case 'Monster':{
-                        $("#monster_bucks").attr('style','background: url('+item.url+') no-repeat center;background-size: cover;height:100vh;');
-                        break;
-                    }default: break;
-                }
-            }
+    $scope.$watch('TotalPage',function (p1, p2, p3) {
+        if(p1>=100){
+            $("div#preloader").hide();
+            $("body").removeClass('body_loader');
         }
-    }, true);
+    },true);
     $scope.GetSeasons();
     $scope.GetPrincipal();
     $scope.GetLodge();

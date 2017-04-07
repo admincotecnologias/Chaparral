@@ -4362,6 +4362,14 @@ nav .input-field label.active {
     a.button-collapse {
         margin-left: 10px;
     }
+    @media (orientation:landscape) {
+        .navbar-fixed {
+            height: 10vh;
+        }
+        #base img{
+            width: 10vw;
+        }
+    }
 }
 
 @font-face {

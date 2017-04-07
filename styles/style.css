@@ -43,6 +43,19 @@ html {
     animation-duration: .8s;
     animation-timing-function: ease-in-out;
     animation-direction: alternate;
+    width: 10vh;
+    height: auto;
+}
+@media (max-width: 767) {
+    .mouse {
+        margin-top: 50px;
+        width: 5vh !important;
+        height: auto !important;
+        animation: scroll infinite;
+        animation-duration: .8s;
+        animation-timing-function: ease-in-out;
+        animation-direction: alternate;
+    }
 }
 
 @keyframes scroll {
@@ -91,14 +104,41 @@ span {
     padding-left: 0px;
     padding-right: 0px;
 }
-
 .filter-home {
     background: rgba(111, 74, 42, .30);
     height: 100%;
     width: 100%;
     z-index: 10;
     position: absolute;
-    margin-top: 0px
+    margin-top: 0px;
+}
+@media (max-width: 1024px) {
+    @media (orientation: portrait){
+        .Wrapper-Section {
+            height: 100vh;
+            padding: 0px;
+            z-index: -2;
+            min-height: 1450px !important;
+        }
+        .Wrapper-Home {
+            height: 100vh;
+            background: url("../../images/home_background.jpg") no-repeat center;
+            background-size: cover;
+            padding-top: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            min-height: 1450px !important;
+        }
+        .filter-home {
+            background: rgba(111, 74, 42, .30);
+            height: 100%;
+            width: 100%;
+            z-index: 10;
+            position: absolute;
+            margin-top: 0px;
+            min-height: 1450px !important;
+        }
+    }
 }
 
 .border-home {
@@ -123,14 +163,13 @@ div.toast {
 }
 
 .Wrapper-About {
-    height: 100vh;
+    height: 100%;
     background: url("../../images/darkermap.jpg") no-repeat center;
     background-size: cover;
     padding-top: 0px;
     padding-left: 0px;
     padding-right: 0px;
 }
-
 .filter-about {
     background: rgba(111, 74, 42, .30) !important;
     z-index: 10;
@@ -147,7 +186,24 @@ div.toast {
     height: 15%;
     margin-top: 55%;
 }
-
+@media (max-width: 1025px) {
+    .Wrapper-About {
+        height: 100%;
+        background: url("../../images/darkermap.jpg") no-repeat center;
+        background-size: cover;
+        padding-top: 0px;
+        padding-left: 0px;
+        padding-right: 0px;
+        min-height: 1450px !important;
+    }
+    .img-about {
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        position: relative;
+        min-height: 1450px !important;
+    }
+}
 .Login_logo {
     height: 25%;
     margin-top: 10%;
@@ -176,6 +232,19 @@ div.toast {
     padding-top: 0px;
     padding-left: 0px;
     padding-right: 0px;
+}
+@media (max-width: 1024px) {
+    @media (orientation: portrait) {
+        .Wrapper-Lodge {
+            height: 100vh;
+            background: url("../../images/lightermap.jpg") repeat center;
+            background-size: cover;
+            padding-top: 0px;
+            padding-left: 0px;
+            padding-right: 0px;
+            min-height: 1450px;
+        }
+    }
 }
 
 .border-contact {
@@ -299,4 +368,40 @@ div.toast {
 }
 .border-none{
     border: none !important;
+}
+.image-background{
+    background-size: cover !important;
+    height: auto;
+}
+@media (orientation:landscape) { /* ====== */
+    @media (max-width:1024px) {
+        .image-background{
+            background-size: cover !important;
+            height: 100vw !important;
+            min-height: 1500px !important;
+        }
+    }
+}
+
+/* Preloader */
+.body_loader{
+    overflow: hidden;
+}
+#preloader {
+    position: fixed;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    /*background: rgba(111, 74, 42, .60) !important; /* change if the mask should have another color then white */
+    z-index:9999; /* makes sure it stays on top */
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+#status {
+    position:absolute;
+    left:0%; /* centers the loading animation horizontally one the screen */
+    right: 0;
+    margin: auto;
 }
