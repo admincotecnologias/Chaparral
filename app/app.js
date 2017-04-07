@@ -19,7 +19,7 @@ chaparral = angular.module("Chaparral", ['ngRoute', 'ngTouch', 'firebase', 'ngFi
         principal:'Principal'
     })
     .constant('api',{
-        storage:'http://192.168.1.18:8133/api/',
+        storage:'http://storagenode.dyndns.org:8133/',
         //storage:'http://localhost:8080/api/',
         lodge: ',Lodge,',
         season: ',Seasons,',
